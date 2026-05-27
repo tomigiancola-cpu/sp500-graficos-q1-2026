@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>S&P 500 Q1 2026 — Proyecciones EPS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #FAFAF8;
+      color: #1a1a18;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+    .card {
+      background: #fff;
+      border: 0.5px solid #dddbd3;
+      border-radius: 12px;
+      padding: 2rem 2.25rem 1.5rem;
+      max-width: 560px;
+      width: 100%;
+    }
+    .kicker {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #888780;
+      margin-bottom: 6px;
+      font-family: 'DM Mono', monospace;
+    }
+    .title {
+      font-size: 16px;
+      font-weight: 500;
+      color: #1a1a18;
+      margin-bottom: 1.25rem;
+      line-height: 1.4;
+    }
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 1.25rem;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: #888780;
+      font-family: 'DM Mono', monospace;
+    }
+    .legend-sq {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+    }
+    .legend-dash {
+      width: 20px;
+      border-top: 2px dashed #993C1D;
+    }
+    .chart-wrap {
+      position: relative;
+      width: 100%;
+      height: 260px;
+    }
+    .note {
+      background: #FAEEDA;
+      color: #633806;
+      font-size: 12px;
+      font-family: 'DM Mono', monospace;
+      padding: 8px 12px;
+      border-radius: 6px;
+      margin-top: 1.25rem;
+    }
+    .source {
+      font-size: 11px;
+      color: #aaa89e;
+      border-top: 0.5px solid #e8e6de;
+      padding-top: 10px;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <p class="kicker">Gráfico 5 — Proyecciones</p>
+    <p class="title">Estimaciones de crecimiento de EPS del S&amp;P 500 — Q2 a Q4 2026</p>
+
+    <div class="legend">
+      <span class="legend-item">
+        <span class="legend-sq" style="background:#85B7EB;"></span>
+        Estimación
+      </span>
+      <span class="legend-item">
+        <span class="legend-dash"></span>
+        Q1 2026 real (28.4%)
+      </span>
+    </div>
+
+    <div class="chart-wrap">
+      <canvas id="chart-g5" role="img" aria-label="Estimaciones de crecimiento de EPS del S&P 500 para Q2 2026 (20.5%), Q3 2026 (23.6%) y Q4 2026 (21.1%), comparadas con el resultado real de Q1 2026 (28.4%) representado con línea punteada.">Q2 2026: 20.5%, Q3 2026: 23.6%, Q4 2026: 21.1%. Todos por debajo del resultado real de Q1 2026: 28.4%.</canvas>
+    </div>
+
+    <div class="note">
+      La vara de Q1 (28.4%) supera todas las estimaciones para el resto de 2026
+    </div>
+
+    <p class="source">Fuente: FactSet Earnings Insight, mayo de 2026 &nbsp;·&nbsp; La línea de referencia indica el crecimiento real de Q1 2026</p>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <script>
+    new Chart(document.getElementById('chart-g5'), {
+      type: 'bar',
+      data: {
+        labels: ['Q2 2026', 'Q3 2026', 'Q4 2026'],
+        datasets: [
+          {
+            label: 'Estimación',
+            data: [20.5, 23.6, 21.1],
+            backgroundColor: ['#85B7EB', '#85B7EB', '#85B7EB'],
+            borderRadius: 3,
+            barThickness: 80,
+            order: 2
+          },
+          {
+            label: 'Q1 2026 real (28.4%)',
+            data: [28.4, 28.4, 28.4],
+            type: 'line',
+            borderColor: '#993C1D',
+            borderDash: [6, 4],
+            borderWidth: 2,
+            pointRadius: 0,
+            fill: false,
+            order: 1
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: ctx => ctx.parsed.y.toFixed(1) + '%' } }
+        },
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: { color: '#444441', font: { size: 13, family: 'DM Sans' } }
+          },
+          y: {
+            min: 0, max: 35,
+            grid: { color: 'rgba(0,0,0,0.05)' },
+            ticks: { callback: v => v + '%', color: '#888780', font: { size: 11, family: 'DM Mono' } }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
