@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Precio del Brent — shock de Ormuz 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #FAFAF8;
+      color: #1a1a18;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+    .card {
+      background: #fff;
+      border: 0.5px solid #dddbd3;
+      border-radius: 12px;
+      padding: 2rem 2.25rem 1.5rem;
+      max-width: 680px;
+      width: 100%;
+    }
+    .kicker {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #888780;
+      margin-bottom: 6px;
+      font-family: 'DM Mono', monospace;
+    }
+    .title {
+      font-size: 16px;
+      font-weight: 500;
+      color: #1a1a18;
+      margin-bottom: 1.25rem;
+      line-height: 1.4;
+    }
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 1.25rem;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: #888780;
+      font-family: 'DM Mono', monospace;
+    }
+    .legend-line {
+      width: 20px;
+      height: 2px;
+    }
+    .events {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 1.25rem;
+    }
+    .event-badge {
+      font-size: 11px;
+      font-family: 'DM Mono', monospace;
+      padding: 4px 10px;
+      border-radius: 5px;
+      font-weight: 500;
+    }
+    .chart-wrap {
+      position: relative;
+      width: 100%;
+      height: 300px;
+    }
+    .source {
+      font-size: 11px;
+      color: #aaa89e;
+      border-top: 0.5px solid #e8e6de;
+      padding-top: 10px;
+      margin-top: 1.25rem;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <p class="kicker">Riesgo energético</p>
+    <p class="title">Precio del Brent — del pre-guerra al shock de Ormuz (US$/barril)</p>
+
+    <div class="legend">
+      <span class="legend-item">
+        <span class="legend-line" style="background:#185FA5;"></span>
+        Precio Brent
+      </span>
+      <span class="legend-item">
+        <span class="legend-line" style="border-top: 2px dashed #E24B4A; background: transparent;"></span>
+        Nivel pre-conflicto (~US$70)
+      </span>
+    </div>
+
+    <div class="events">
+      <span class="event-badge" style="background:#FAEEDA; color:#633806;">28 feb — Inicio guerra</span>
+      <span class="event-badge" style="background:#FCEBEB; color:#501313;">7 abr — Pico US$127,9</span>
+      <span class="event-badge" style="background:#E6F1FB; color:#042C53;">27 may — US$108,5</span>
+    </div>
+
+    <div class="chart-wrap">
+      <canvas id="chart-brent" role="img" aria-label="Precio del Brent en dólares por barril desde enero a mayo de 2026. Antes del conflicto rondaba los 70 dólares. Tras el cierre del Estrecho de Ormuz el 28 de febrero subió abruptamente, alcanzando un pico de 127.9 dólares el 2 de abril. Luego retrocedió a niveles de 108 dólares en mayo.">Brent enero 2026: US$70. Inicio conflicto 28 feb. Pico 2 abril: US$127.9. Mayo 27: US$108.5.</canvas>
+    </div>
+
+    <p class="source">Fuentes: EIA Short-Term Energy Outlook (mayo 2026), Trading Economics. Datos mensuales promedio hasta abril; precio spot al 27 de mayo de 2026.</p>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <script>
+    const labels = ['Ene','1 feb','15 feb','28 feb','15 mar','31 mar','2 abr','15 abr','30 abr','15 may','27 may'];
+    const data   = [70, 71, 70, 75, 95, 108, 127.9, 120, 117, 112, 108.5];
+
+    const pointColors = data.map((v, i) => {
+      if (i === 3) return '#E24B4A';
+      if (i === 6) return '#A32D2D';
+      if (i === 8) return '#BA7517';
+      return '#185FA5';
+    });
+    const pointSizes = data.map((v, i) => {
+      if (i === 3 || i === 6 || i === 8 || i === 0 || i === data.length - 1) return 6;
+      return 3;
+    });
+
+    new Chart(document.getElementById('chart-brent'), {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          {
+            label: 'Precio Brent',
+            data,
+            borderColor: '#185FA5',
+            backgroundColor: 'rgba(24,95,165,0.07)',
+            fill: true,
+            tension: 0.35,
+            borderWidth: 2.5,
+            pointRadius: pointSizes,
+            pointBackgroundColor: pointColors,
+            pointBorderColor: pointColors,
+            pointBorderWidth: 0
+          },
+          {
+            label: 'Pre-conflicto ~US$70',
+            data: new Array(labels.length).fill(70),
+            borderColor: '#E24B4A',
+            borderDash: [5, 4],
+            borderWidth: 1.5,
+            pointRadius: 0,
+            fill: false
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: ctx => 'Brent: US$' + ctx.parsed.y.toFixed(1) + '/barril' } }
+        },
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: { color: '#444441', font: { size: 10, family: 'DM Mono' }, maxRotation: 0, autoSkip: false }
+          },
+          y: {
+            min: 55, max: 145,
+            grid: { color: 'rgba(0,0,0,0.05)' },
+            ticks: { callback: v => 'US$' + v, color: '#888780', font: { size: 11, family: 'DM Mono' }, stepSize: 20 }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
