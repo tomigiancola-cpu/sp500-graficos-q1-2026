@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ranking FIFA vs. PBI per cápita de las 48 selecciones</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7/css/flag-icons.min.css">
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 2rem 1rem;
+    background: #f1efe8;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+  }
+  .card {
+    background: #ffffff;
+    border: 0.5px solid rgba(11,11,11,0.10);
+    border-top: 4px solid #D4537E;
+    border-radius: 12px;
+    padding: 1.5rem;
+    max-width: 720px;
+    width: 100%;
+  }
+  .kicker {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: #993556;
+    margin: 0 0 8px;
+    text-transform: uppercase;
+  }
+  h1 {
+    font-size: 21px;
+    font-weight: 500;
+    line-height: 1.3;
+    margin: 0 0 6px;
+    max-width: 540px;
+    color: #0b0b0b;
+  }
+  .subtitle {
+    font-size: 14px;
+    color: #52514e;
+    margin: 0 0 18px;
+    line-height: 1.5;
+  }
+  .legend {
+    display: flex;
+    gap: 14px;
+    margin-top: 10px;
+    font-size: 11px;
+    color: #898781;
+  }
+  .legend span { display: flex; align-items: center; gap: 4px; }
+  .swatch-line { width: 12px; height: 2px; background: #9c9a92; }
+  .swatch-dot { width: 9px; height: 9px; border-radius: 50%; background: #FAC775; }
+  .footer {
+    border-top: 0.5px solid rgba(11,11,11,0.10);
+    margin-top: 14px;
+    padding-top: 10px;
+  }
+  .footer p { font-size: 11px; color: #898781; margin: 0; }
+  .chart-wrap { position: relative; width: 100%; height: 440px; }
+  @media (prefers-color-scheme: dark) {
+    body { background: #1a1a19; }
+    .card { background: #1a1a19; border-color: rgba(255,255,255,0.10); }
+    h1 { color: #ffffff; }
+    .subtitle { color: #c3c2b7; }
+    .legend, .footer p { color: #898781; }
+    .footer { border-color: rgba(255,255,255,0.10); }
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <p class="kicker">Mundial 2026 &middot; economía y fútbol</p>
+  <h1>Ranking FIFA vs. PBI per cápita de las 48 selecciones</h1>
+  <p class="subtitle">El dinero ayuda, pero no asegura nada: así se reparten los 48 países entre lo que rankean y lo que generan.</p>
+
+  <div class="chart-wrap">
+    <canvas id="scatterChart" role="img" aria-label="Dispersión entre ranking FIFA (invertido, mejor a la derecha) y PBI per cápita de las 48 selecciones del Mundial 2026, cada una representada por su bandera, sobre cuatro cuadrantes coloreados.">Gráfico de dispersión ranking FIFA vs PBI per cápita, correlación débil y negativa.</canvas>
+  </div>
+
+  <div class="legend">
+    <span><span class="swatch-line"></span>Tendencia</span>
+    <span><span class="swatch-dot"></span>Argentina</span>
+  </div>
+
+  <div class="footer">
+    <p>Fuentes: FIFA/Coca-Cola Men&#39;s World Ranking (junio 2026) &middot; FMI, World Economic Outlook (abril 2026)</p>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const points = [
+["Argentina",1,13895,"ar"],["España",2,40582,"es"],["Francia",3,51708,"fr"],["Inglaterra",4,60011,"gb-eng"],
+["Portugal",5,33972,"pt"],["Brasil",6,10709,"br"],["Marruecos",7,5154,"ma"],["Países Bajos",8,77881,"nl"],
+["Bélgica",9,63896,"be"],["Alemania",10,63600,"de"],["Croacia",11,29368,"hr"],["Colombia",13,8644,"co"],
+["México",14,15111,"mx"],["Senegal",15,2030,"sn"],["Uruguay",16,26041,"uy"],["Estados Unidos",17,92883,"us"],
+["Japón",18,36391,"jp"],["Suiza",19,118173,"ch"],["Irán",20,4250,"ir"],["Turquía",22,18232,"tr"],
+["Ecuador",23,7384,"ec"],["Austria",24,65640,"at"],["Corea del Sur",25,37523,"kr"],["Australia",27,69358,"au"],
+["Argelia",28,5956,"dz"],["Egipto",29,3579,"eg"],["Canadá",30,58244,"ca"],["Noruega",31,96580,"no"],
+["Costa de Marfil",33,3294,"ci"],["Panamá",34,20754,"pa"],["Suecia",38,66124,"se"],["Chequia",40,38373,"cz"],
+["Paraguay",41,7324,"py"],["Escocia",42,60011,"gb-sct"],["Túnez",45,4826,"tn"],["RD Congo",46,801,"cd"],
+["Uzbekistán",50,4136,"uz"],["Catar",56,76534,"qa"],["Irak",57,5873,"iq"],["Sudáfrica",60,6835,"za"],
+["Arabia Saudita",61,35839,"sa"],["Jordania",63,5149,"jo"],["Bosnia y Herz.",64,10546,"ba"],
+["Cabo Verde",67,6069,"cv"],["Ghana",73,3179,"gh"],["Curazao",82,22192,"cw"],["Haití",83,2444,"ht"],
+["Nueva Zelanda",85,52181,"nz"]
+];
+
+function loadFlag(cc) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.width = 22; img.height = 16;
+    img.onload = () => resolve(img);
+    img.onerror = () => resolve(img);
+    img.src = `https://cdn.jsdelivr.net/npm/flag-icons@7/flags/4x3/${cc}.svg`;
+  });
+}
+
+(async () => {
+  const flagImgs = await Promise.all(points.map(p => loadFlag(p[3])));
+  const allData = points.map((p,i) => ({ x:p[1], y:p[2], label:p[0], img:flagImgs[i] }));
+  const argData = points.filter(p=>p[0]==="Argentina").map(p=>({x:p[1],y:p[2]}));
+
+  const intercept = 10.292, slope = -0.01619;
+  const trend = [{x:1,y:Math.exp(intercept+slope*1)},{x:85,y:Math.exp(intercept+slope*85)}];
+
+  const isDark = matchMedia('(prefers-color-scheme: dark)').matches;
+  const RANK_SPLIT = 25, GDP_SPLIT = 20000;
+  const quad = isDark
+    ? { topLeft:'rgba(65,36,2,0.5)', topRight:'rgba(4,52,44,0.5)', botLeft:'rgba(44,44,42,0.5)', botRight:'rgba(74,21,40,0.5)' }
+    : { topLeft:'#FAEEDA', topRight:'#E1F5EE', botLeft:'#F1EFE8', botRight:'#FBEAF0' };
+  const quadText = isDark
+    ? { topLeft:'#FAC775', topRight:'#5DCAA5', botLeft:'#B4B2A9', botRight:'#ED93B1' }
+    : { topLeft:'#854F0B', topRight:'#0F6E56', botLeft:'#5F5E5A', botRight:'#993556' };
+
+  const quadrantPlugin = {
+    id: 'quadrants',
+    beforeDatasetsDraw(chart) {
+      const { ctx, chartArea: { left, right, top, bottom }, scales: { x, y } } = chart;
+      const xSplit = x.getPixelForValue(RANK_SPLIT);
+      const ySplit = y.getPixelForValue(GDP_SPLIT);
+      ctx.save();
+      ctx.fillStyle = quad.topLeft; ctx.fillRect(left, top, xSplit-left, ySplit-top);
+      ctx.fillStyle = quad.topRight; ctx.fillRect(xSplit, top, right-xSplit, ySplit-top);
+      ctx.fillStyle = quad.botLeft; ctx.fillRect(left, ySplit, xSplit-left, bottom-ySplit);
+      ctx.fillStyle = quad.botRight; ctx.fillRect(xSplit, ySplit, right-xSplit, bottom-ySplit);
+      ctx.font = '500 11px sans-serif';
+      ctx.fillStyle = quadText.topLeft; ctx.textAlign='left'; ctx.fillText('Plata que no rinde', left+8, top+16);
+      ctx.fillStyle = quadText.topRight; ctx.textAlign='right'; ctx.fillText('Los favoritos del manual', right-8, top+16);
+      ctx.fillStyle = quadText.botLeft; ctx.textAlign='left'; ctx.fillText('Rezagados', left+8, bottom-8);
+      ctx.fillStyle = quadText.botRight; ctx.textAlign='right'; ctx.fillText('Los que rompen el molde', right-8, bottom-8);
+      ctx.restore();
+    }
+  };
+
+  new Chart(document.getElementById('scatterChart'), {
+    type: 'scatter',
+    plugins: [quadrantPlugin],
+    data: {
+      datasets: [
+        { type:'scatter', label:'Halo', data: argData, backgroundColor:'#FAC775', pointRadius:16, pointHoverRadius:16, order:3 },
+        { type:'line', label:'Tendencia', data: trend, borderColor:'#9c9a92', borderDash:[6,4], borderWidth:1.5, pointRadius:0, fill:false, order:2 },
+        { type:'scatter', label:'Selecciones', data: allData, pointStyle: allData.map(d=>d.img), pointRadius:11, pointHoverRadius:13, order:1 }
+      ]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins: {
+        legend:{display:false},
+        tooltip:{ callbacks:{ label: (ctx)=> ctx.raw.label ? `${ctx.raw.label}: puesto ${ctx.raw.x}, ${new Intl.NumberFormat('es-AR',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(ctx.raw.y)}` : '' } }
+      },
+      scales: {
+        x: { reverse:true, title:{display:true,text:'Ranking FIFA (peor \u2190     \u2192 mejor, Argentina a la derecha)'}, min:0, max:90, grid:{display:false} },
+        y: { type:'logarithmic', title:{display:true,text:'PBI per cápita (USD, escala log)'}, grid:{display:false} }
+      }
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
