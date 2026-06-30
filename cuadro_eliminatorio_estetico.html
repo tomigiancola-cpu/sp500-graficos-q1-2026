@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cuadro eliminatorio Mundial 2026 vs. predicciones M&amp;G</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7/css/flag-icons.min.css">
+<style>
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; overflow: hidden; }
+  body {
+    background: #0c1a2e;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+  }
+  .panel {
+    background: #0f2238;
+    border: 1px solid #1f3a57;
+    border-radius: 14px;
+    padding: 18px 26px 16px;
+    width: 1100px;
+  }
+  .kicker {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    color: #d4af6a;
+    margin: 0 0 4px;
+    text-transform: uppercase;
+  }
+  h1 {
+    font-size: 19px;
+    font-weight: 600;
+    line-height: 1.25;
+    margin: 0 0 10px;
+    color: #f5f1e6;
+  }
+  .legend {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+    font-size: 11px;
+    color: #b9c4d4;
+  }
+  .legend span { display: flex; align-items: center; gap: 5px; }
+  #bracket { position: relative; width: 1038px; height: 480px; margin: 0 auto; }
+  .footer { border-top: 1px solid #1f3a57; margin-top: 10px; padding-top: 8px; display: flex; justify-content: space-between; align-items: center; }
+  .footer p { font-size: 10.5px; color: #6f8099; margin: 0; }
+  .fi { box-shadow: 0 0 0 0.5px rgba(255,255,255,0.18); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<div class="panel">
+  <p class="kicker">Mundial 2026 &middot; M&amp;G vs. realidad</p>
+  <h1>El cuadro eliminatorio frente a las predicciones de M&amp;G</h1>
+
+  <div class="legend"></div>
+
+  <div id="bracket"></div>
+
+  <div class="footer">
+    <p>Dieciseisavos según Bond Vigilantes (M&amp;G), al 30 de junio. Las rondas siguientes se completan a medida que avanza el torneo.</p>
+    <p style="font-weight:600;color:#8b9cb3">Mundial 2026</p>
+  </div>
+</div>
+
+<script>
+function icon(type, color, size) {
+  size = size || 13;
+  const paths = {
+    check: '<path d="M4 12l5 5L20 6" stroke="' + color + '" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>',
+    x: '<path d="M5 5l14 14M19 5L5 19" stroke="' + color + '" stroke-width="2.4" fill="none" stroke-linecap="round"/>',
+    trophy: '<path d="M8 4h8v4a4 4 0 0 1-8 0V4z" stroke="' + color + '" stroke-width="1.8" fill="none"/><path d="M8 5H5a2 2 0 0 0 2 4M16 5h3a2 2 0 0 1-2 4" stroke="' + color + '" stroke-width="1.8" fill="none"/><path d="M12 12v4M9 20h6M10 16h4v4h-4z" stroke="' + color + '" stroke-width="1.8" fill="none" stroke-linejoin="round"/>',
+    clock: '<circle cx="12" cy="12" r="9" stroke="' + color + '" stroke-width="1.8" fill="none"/><path d="M12 7v5l3 3" stroke="' + color + '" stroke-width="1.8" fill="none" stroke-linecap="round"/>'
+  };
+  return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 24 24">' + paths[type] + '</svg>';
+}
+
+document.querySelector('.legend').innerHTML = `
+  <span>${icon('trophy','#d4af6a')} Marcador exacto</span>
+  <span>${icon('check','#6fbf73')} Acertó el resultado</span>
+  <span>${icon('x','#e2706f')} Falló</span>
+  <span>${icon('clock','#6f8099')} Sin jugar</span>
+`;
+
+const geo = {"segs": [{"left": 116, "top": 49.0, "w": 15.0, "h": 2}, {"left": 116, "top": 106.0, "w": 15.0, "h": 2}, {"left": 130.0, "top": 50, "w": 2, "h": 57}, {"left": 131.0, "top": 77.5, "w": 15.0, "h": 2}, {"left": 116, "top": 163.0, "w": 15.0, "h": 2}, {"left": 116, "top": 220.0, "w": 15.0, "h": 2}, {"left": 130.0, "top": 164, "w": 2, "h": 57}, {"left": 131.0, "top": 191.5, "w": 15.0, "h": 2}, {"left": 116, "top": 277.0, "w": 15.0, "h": 2}, {"left": 116, "top": 334.0, "w": 15.0, "h": 2}, {"left": 130.0, "top": 278, "w": 2, "h": 57}, {"left": 131.0, "top": 305.5, "w": 15.0, "h": 2}, {"left": 116, "top": 391.0, "w": 15.0, "h": 2}, {"left": 116, "top": 448.0, "w": 15.0, "h": 2}, {"left": 130.0, "top": 392, "w": 2, "h": 57}, {"left": 131.0, "top": 419.5, "w": 15.0, "h": 2}, {"left": 224, "top": 77.5, "w": 15.0, "h": 2}, {"left": 224, "top": 191.5, "w": 15.0, "h": 2}, {"left": 238.0, "top": 78.5, "w": 2, "h": 114.0}, {"left": 239.0, "top": 134.5, "w": 15.0, "h": 2}, {"left": 224, "top": 305.5, "w": 15.0, "h": 2}, {"left": 224, "top": 419.5, "w": 15.0, "h": 2}, {"left": 238.0, "top": 306.5, "w": 2, "h": 114.0}, {"left": 239.0, "top": 362.5, "w": 15.0, "h": 2}, {"left": 332, "top": 134.5, "w": 15.0, "h": 2}, {"left": 332, "top": 362.5, "w": 15.0, "h": 2}, {"left": 346.0, "top": 135.5, "w": 2, "h": 228.0}, {"left": 347.0, "top": 248.5, "w": 15.0, "h": 2}, {"left": 440, "top": 248.5, "w": 30, "h": 2}, {"left": 570, "top": 248.5, "w": 28, "h": 2}, {"left": 907.0, "top": 49.0, "w": 15.0, "h": 2}, {"left": 907.0, "top": 106.0, "w": 15.0, "h": 2}, {"left": 906.0, "top": 50, "w": 2, "h": 57}, {"left": 892, "top": 77.5, "w": 15.0, "h": 2}, {"left": 907.0, "top": 163.0, "w": 15.0, "h": 2}, {"left": 907.0, "top": 220.0, "w": 15.0, "h": 2}, {"left": 906.0, "top": 164, "w": 2, "h": 57}, {"left": 892, "top": 191.5, "w": 15.0, "h": 2}, {"left": 907.0, "top": 277.0, "w": 15.0, "h": 2}, {"left": 907.0, "top": 334.0, "w": 15.0, "h": 2}, {"left": 906.0, "top": 278, "w": 2, "h": 57}, {"left": 892, "top": 305.5, "w": 15.0, "h": 2}, {"left": 907.0, "top": 391.0, "w": 15.0, "h": 2}, {"left": 907.0, "top": 448.0, "w": 15.0, "h": 2}, {"left": 906.0, "top": 392, "w": 2, "h": 57}, {"left": 892, "top": 419.5, "w": 15.0, "h": 2}, {"left": 799.0, "top": 77.5, "w": 15.0, "h": 2}, {"left": 799.0, "top": 191.5, "w": 15.0, "h": 2}, {"left": 798.0, "top": 78.5, "w": 2, "h": 114.0}, {"left": 784, "top": 134.5, "w": 15.0, "h": 2}, {"left": 799.0, "top": 305.5, "w": 15.0, "h": 2}, {"left": 799.0, "top": 419.5, "w": 15.0, "h": 2}, {"left": 798.0, "top": 306.5, "w": 2, "h": 114.0}, {"left": 784, "top": 362.5, "w": 15.0, "h": 2}, {"left": 691.0, "top": 134.5, "w": 15.0, "h": 2}, {"left": 691.0, "top": 362.5, "w": 15.0, "h": 2}, {"left": 690.0, "top": 135.5, "w": 2, "h": 228.0}, {"left": 676, "top": 248.5, "w": 15.0, "h": 2}], "boxes": {"R32L": [{"x": 0, "y": 50, "w": 116, "h": 38, "cx": 58.0, "cy": 50}, {"x": 0, "y": 107, "w": 116, "h": 38, "cx": 58.0, "cy": 107}, {"x": 0, "y": 164, "w": 116, "h": 38, "cx": 58.0, "cy": 164}, {"x": 0, "y": 221, "w": 116, "h": 38, "cx": 58.0, "cy": 221}, {"x": 0, "y": 278, "w": 116, "h": 38, "cx": 58.0, "cy": 278}, {"x": 0, "y": 335, "w": 116, "h": 38, "cx": 58.0, "cy": 335}, {"x": 0, "y": 392, "w": 116, "h": 38, "cx": 58.0, "cy": 392}, {"x": 0, "y": 449, "w": 116, "h": 38, "cx": 58.0, "cy": 449}], "R16L": [{"x": 146, "y": 78.5, "w": 78, "h": 34, "cx": 185.0, "cy": 78.5}, {"x": 146, "y": 192.5, "w": 78, "h": 34, "cx": 185.0, "cy": 192.5}, {"x": 146, "y": 306.5, "w": 78, "h": 34, "cx": 185.0, "cy": 306.5}, {"x": 146, "y": 420.5, "w": 78, "h": 34, "cx": 185.0, "cy": 420.5}], "QFL": [{"x": 254, "y": 135.5, "w": 78, "h": 34, "cx": 293.0, "cy": 135.5}, {"x": 254, "y": 363.5, "w": 78, "h": 34, "cx": 293.0, "cy": 363.5}], "SFL": [{"x": 362, "y": 249.5, "w": 78, "h": 34, "cx": 401.0, "cy": 249.5}], "FINAL": {"cx": 520.0, "cy": 249.5}, "SFR": [{"x": 598, "y": 249.5, "w": 78, "h": 34, "cx": 637.0, "cy": 249.5}], "QFR": [{"x": 706, "y": 135.5, "w": 78, "h": 34, "cx": 745.0, "cy": 135.5}, {"x": 706, "y": 363.5, "w": 78, "h": 34, "cx": 745.0, "cy": 363.5}], "R16R": [{"x": 814, "y": 78.5, "w": 78, "h": 34, "cx": 853.0, "cy": 78.5}, {"x": 814, "y": 192.5, "w": 78, "h": 34, "cx": 853.0, "cy": 192.5}, {"x": 814, "y": 306.5, "w": 78, "h": 34, "cx": 853.0, "cy": 306.5}, {"x": 814, "y": 420.5, "w": 78, "h": 34, "cx": 853.0, "cy": 420.5}], "R32R": [{"x": 922, "y": 50, "w": 116, "h": 38, "cx": 980.0, "cy": 50}, {"x": 922, "y": 107, "w": 116, "h": 38, "cx": 980.0, "cy": 107}, {"x": 922, "y": 164, "w": 116, "h": 38, "cx": 980.0, "cy": 164}, {"x": 922, "y": 221, "w": 116, "h": 38, "cx": 980.0, "cy": 221}, {"x": 922, "y": 278, "w": 116, "h": 38, "cx": 980.0, "cy": 278}, {"x": 922, "y": 335, "w": 116, "h": 38, "cx": 980.0, "cy": 335}, {"x": 922, "y": 392, "w": 116, "h": 38, "cx": 980.0, "cy": 392}, {"x": 922, "y": 449, "w": 116, "h": 38, "cx": 980.0, "cy": 449}]}};
+
+const statusMap = {
+  exact:   { border:'#d4af6a', bg:'#2a2410', iconType:'trophy' },
+  correct: { border:'#6fbf73', bg:'#16261a', iconType:'check' },
+  wrong:   { border:'#e2706f', bg:'#2a1717', iconType:'x' },
+  pending: { border:'#33506e', bg:'#142639', iconType:'clock' }
+};
+
+const R32L_data = [
+  {a:'Alemania',cc:'de',b:'Paraguay',bcc:'py',status:'wrong'},
+  {a:'Francia',cc:'fr',b:'Suecia',bcc:'se',status:'pending'},
+  {a:'Sudáfrica',cc:'za',b:'Canadá',bcc:'ca',status:'correct'},
+  {a:'Países Bajos',cc:'nl',b:'Marruecos',bcc:'ma',status:'exact'},
+  {a:'Portugal',cc:'pt',b:'Croacia',bcc:'hr',status:'pending'},
+  {a:'España',cc:'es',b:'Austria',bcc:'at',status:'pending'},
+  {a:'Estados Unidos',cc:'us',b:'Bosnia y H.',bcc:'ba',status:'pending'},
+  {a:'Bélgica',cc:'be',b:'Senegal',bcc:'sn',status:'pending'}
+];
+const R32R_data = [
+  {a:'Brasil',cc:'br',b:'Japón',bcc:'jp',status:'exact'},
+  {a:'Costa de Marfil',cc:'ci',b:'Noruega',bcc:'no',status:'pending'},
+  {a:'México',cc:'mx',b:'Ecuador',bcc:'ec',status:'pending'},
+  {a:'Inglaterra',cc:'gb-eng',b:'RD Congo',bcc:'cd',status:'pending'},
+  {a:'Argentina',cc:'ar',b:'Cabo Verde',bcc:'cv',status:'pending'},
+  {a:'Australia',cc:'au',b:'Egipto',bcc:'eg',status:'pending'},
+  {a:'Suiza',cc:'ch',b:'Argelia',bcc:'dz',status:'pending'},
+  {a:'Colombia',cc:'co',b:'Ghana',bcc:'gh',status:'pending'}
+];
+
+const winnerLabel = { 'Paraguay':['Paraguay','py'], 'Canadá':['Canadá','ca'], 'Marruecos':['Marruecos','ma'], 'Brasil':['Brasil','br'], 'Noruega':['Noruega','no'] };
+
+const el = document.getElementById('bracket');
+
+geo.segs.forEach(s => {
+  const line = document.createElement('div');
+  line.style.cssText = `position:absolute;left:${s.left}px;top:${s.top}px;width:${s.w}px;height:${s.h}px;background:#2b4a63`;
+  el.appendChild(line);
+});
+
+function flagSpan(cc) {
+  return `<span class="fi fi-${cc}" style="border-radius:2px;flex-shrink:0;width:16px;height:12px"></span>`;
+}
+
+function renderR32(data, boxes) {
+  data.forEach((m,i) => {
+    const b = boxes[i];
+    const s = statusMap[m.status];
+    const card = document.createElement('div');
+    card.style.cssText = `position:absolute;left:${b.x}px;top:${b.y-b.h/2}px;width:${b.w}px;height:${b.h}px;background:${s.bg};border:1px solid ${s.border};border-radius:6px;display:flex;flex-direction:column;justify-content:center;padding:0 7px;gap:2px`;
+    card.innerHTML = `
+      <div style="display:flex;align-items:center;gap:5px;font-size:10.5px;color:#e8ecf2">${flagSpan(m.cc)}<span style="flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m.a}</span></div>
+      <div style="display:flex;align-items:center;gap:5px;font-size:10.5px;color:#e8ecf2">${flagSpan(m.bcc)}<span style="flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m.b}</span></div>
+    `;
+    const badge = document.createElement('div');
+    badge.style.cssText = `position:absolute;left:${b.x+b.w-15}px;top:${b.y-b.h/2-7}px;width:16px;height:16px;border-radius:50%;background:${s.bg};border:1px solid ${s.border};display:flex;align-items:center;justify-content:center`;
+    badge.innerHTML = icon(s.iconType, s.border, 10);
+    el.appendChild(card);
+    el.appendChild(badge);
+  });
+}
+renderR32(R32L_data, geo.boxes.R32L);
+renderR32(R32R_data, geo.boxes.R32R);
+
+function emptyBox(b, filled) {
+  const card = document.createElement('div');
+  card.style.cssText = `position:absolute;left:${b.x}px;top:${b.y-b.h/2}px;width:${b.w}px;height:${b.h}px;background:#142639;border:1px solid #233f5c;border-radius:6px;display:flex;align-items:center;justify-content:center;padding:0 6px`;
+  if (filled) {
+    card.innerHTML = `<div style="display:flex;align-items:center;gap:5px;font-size:10.5px;color:#e8ecf2">${flagSpan(filled[1])}<span>${filled[0]}</span></div>`;
+  }
+  el.appendChild(card);
+}
+emptyBox(geo.boxes.R16L[0], winnerLabel['Paraguay']);
+emptyBox(geo.boxes.R16L[1], winnerLabel['Canadá']);
+emptyBox(geo.boxes.R16L[2], null);
+emptyBox(geo.boxes.R16L[3], null);
+geo.boxes.QFL.forEach(b => emptyBox(b, null));
+emptyBox(geo.boxes.SFL[0], null);
+
+emptyBox(geo.boxes.R16R[0], winnerLabel['Brasil']);
+emptyBox(geo.boxes.R16R[1], winnerLabel['Noruega']);
+emptyBox(geo.boxes.R16R[2], null);
+emptyBox(geo.boxes.R16R[3], null);
+geo.boxes.QFR.forEach(b => emptyBox(b, null));
+emptyBox(geo.boxes.SFR[0], null);
+
+const trophy = document.createElement('div');
+trophy.style.cssText = `position:absolute;left:${geo.boxes.FINAL.cx-36}px;top:${geo.boxes.FINAL.cy-36}px;width:72px;height:72px;border-radius:50%;background:#22324d;display:flex;align-items:center;justify-content:center;border:1.5px solid #d4af6a`;
+trophy.innerHTML = `<svg width="30" height="30" viewBox="0 0 24 24">${icon('trophy','#d4af6a').replace(/stroke-width="1.8"/g,'stroke-width="1.5"')}</svg>`;
+el.appendChild(trophy);
+
+const finalLabel = document.createElement('div');
+finalLabel.style.cssText = `position:absolute;left:${geo.boxes.FINAL.cx-50}px;top:${geo.boxes.FINAL.cy+38}px;width:100px;text-align:center;font-size:10.5px;font-weight:600;letter-spacing:0.08em;color:#d4af6a;text-transform:uppercase`;
+finalLabel.textContent = 'Final';
+el.appendChild(finalLabel);
+
+const headers = [
+  {label:'16vos', cx: 58}, {label:'8vos', cx: 185}, {label:'4tos', cx: 293}, {label:'Semis', cx: 401},
+  {label:'Semis', cx: 637}, {label:'4tos', cx: 745}, {label:'8vos', cx: 853}, {label:'16vos', cx: 980}
+];
+headers.forEach(h => {
+  const hd = document.createElement('div');
+  hd.style.cssText = `position:absolute;left:${h.cx-58}px;top:6px;width:116px;text-align:center;font-size:10px;font-weight:600;letter-spacing:0.1em;color:#7d8ea5;text-transform:uppercase`;
+  hd.textContent = h.label;
+  el.appendChild(hd);
+});
+</script>
+
+</body>
+</html>
